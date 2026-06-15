@@ -7,3 +7,12 @@ test('Login OrangeHRM', async ({ page }) => {
     await page.getByRole('button', {name: 'Login'}).click()
     await expect(page.getByRole('link', {name: 'Admin'})).toBeVisible()
 });
+
+
+test('Invalid Login OrangeHRM', async ({ page }) => {
+    await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
+    await page.getByRole('textbox', {name: 'Username'}).fill('Admin')
+    await page.getByRole('textbox', {name: 'Password'}).fill('wrongpassword')
+    await page.getByRole('button', {name: 'Login'}).click()
+    await expect(page.getByText('Invalid credentials')).toBeVisible()
+});
