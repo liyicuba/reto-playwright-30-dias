@@ -1,11 +1,13 @@
 import {test, expect} from '@playwright/test'
+import { LoginPage } from '../pageobjects/LoginPage';
+
+
 
 test('get all the usernames registered', async ({page}) =>{
 
-    await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
-    await page.getByRole('textbox', {name: 'Username'}).fill('Admin')
-    await page.getByRole('textbox', {name: 'Password'}).fill('admin123')
-    await page.getByRole('button', {name: 'Login'}).click()
+    const loginPage = new LoginPage(page);
+    await loginPage.doLogin('Admin', 'admin123');
+
     await expect(page.getByRole('link', {name: 'Admin'})).toBeVisible()
 
     await page.getByRole('link', {name: 'Admin'}).click()
@@ -32,10 +34,9 @@ test('get all the usernames registered', async ({page}) =>{
 
 test('get all the Employees registered', async ({page}) =>{
 
-    await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
-    await page.getByRole('textbox', {name: 'Username'}).fill('Admin')
-    await page.getByRole('textbox', {name: 'Password'}).fill('admin123')
-    await page.getByRole('button', {name: 'Login'}).click()
+    const loginPage = new LoginPage(page);
+    await loginPage.doLogin('Admin', 'admin123');
+
     await expect(page.getByRole('link', {name: 'Admin'})).toBeVisible()
 
     await page.getByRole('link', {name: 'Admin'}).click()
@@ -65,10 +66,9 @@ test('Select specific user for edition', async ({page}) =>{
 
     const userForEdition = 'teamseven'
 
-    await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
-    await page.getByRole('textbox', {name: 'Username'}).fill('Admin')
-    await page.getByRole('textbox', {name: 'Password'}).fill('admin123')
-    await page.getByRole('button', {name: 'Login'}).click()
+    const loginPage = new LoginPage(page);
+    await loginPage.doLogin('Admin', 'admin123');
+
     await expect(page.getByRole('link', {name: 'Admin'})).toBeVisible()
 
     await page.getByRole('link', {name: 'Admin'}).click()
@@ -92,10 +92,9 @@ test('Select specific user for edition', async ({page}) =>{
 
 test('Select random user different from Admin and validate', async ({ page }) => {
 
-    await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
-    await page.getByRole('textbox', {name: 'Username'}).fill('Admin')
-    await page.getByRole('textbox', {name: 'Password'}).fill('admin123')
-    await page.getByRole('button', {name: 'Login'}).click()
+    const loginPage = new LoginPage(page);
+    await loginPage.doLogin('Admin', 'admin123');
+
     await expect(page.getByRole('link', {name: 'Admin'})).toBeVisible()
 
     await page.getByRole('link', {name: 'Admin'}).click()

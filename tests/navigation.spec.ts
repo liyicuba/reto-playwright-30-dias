@@ -1,11 +1,10 @@
 import {test, expect} from '@playwright/test';
+import { LoginPage } from '../pageobjects/LoginPage';
 
 test('Check left menu items options', async ({page}) => {
 
-    await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
-    await page.getByRole('textbox', {name: 'Username'}).fill('Admin')
-    await page.getByRole('textbox', {name: 'Password'}).fill('admin123')
-    await page.getByRole('button', {name: 'Login'}).click()
+    const loginPage = new LoginPage(page);
+    await loginPage.doLogin('Admin', 'admin123');
 
     await expect(page.getByRole('link', {name: 'Admin'})).toBeVisible()
 
@@ -45,11 +44,9 @@ test('Check left menu items options', async ({page}) => {
 
 test('Navigate through left menu items', async ({page}) => {
 
-    await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
-    await page.getByRole('textbox', {name: 'Username'}).fill('Admin')
-    await page.getByRole('textbox', {name: 'Password'}).fill('admin123')
-    await page.getByRole('button', {name: 'Login'}).click()
-
+    const loginPage = new LoginPage(page);
+    await loginPage.doLogin('Admin', 'admin123');
+  
     await expect(page.getByRole('link', {name: 'Admin'})).toBeVisible()
 
     const LeftMenuItems = page.getByLabel('sidepanel').getByRole('listitem')
@@ -92,10 +89,8 @@ test('Check all the qualifications links', async ({page}) => {
         }
         ]  
 
-    await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
-    await page.getByRole('textbox', {name: 'Username'}).fill('Admin')
-    await page.getByRole('textbox', {name: 'Password'}).fill('admin123')
-    await page.getByRole('button', {name: 'Login'}).click()
+    const loginPage = new LoginPage(page);
+    await loginPage.doLogin('Admin', 'admin123');
 
     await expect(page.getByRole('link', {name: 'Admin'})).toBeVisible()
     await page.getByRole('link', {name: 'Admin'}).click()
@@ -132,10 +127,8 @@ test('Check all the Organization links', async ({page}) => {
         }
         ]  
 
-    await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
-    await page.getByRole('textbox', {name: 'Username'}).fill('Admin')
-    await page.getByRole('textbox', {name: 'Password'}).fill('admin123')
-    await page.getByRole('button', {name: 'Login'}).click()
+    const loginPage = new LoginPage(page);
+    await loginPage.doLogin('Admin', 'admin123');
 
     await expect(page.getByRole('link', {name: 'Admin'})).toBeVisible()
     await page.getByRole('link', {name: 'Admin'}).click()
