@@ -1,13 +1,25 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pageobjects/LoginPage';
+import { SidePanel, SidePanelItems } from '../components/SidePanel';
+import { SearchInput } from '../components/SearchInput';
 
 
 test('Login OrangeHRM', async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.doLogin('Admin', 'admin123');
 
-    await page.getByRole('button', {name: 'Login'}).click()
-    await expect(page.getByRole('link', {name: 'Admin'})).toBeVisible()
+    const sidePanel = new SidePanel(page);
+    await sidePanel.clickOnOption(SidePanelItems.Admin);
+     
+    
+});
+
+test('Search on SidePanel', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    await loginPage.doLogin('Admin', 'admin123');
+
+    const searchInput = new SearchInput(page);
+    await searchInput.searchAndValidate(SidePanelItems.Admin);
 });
 
 
