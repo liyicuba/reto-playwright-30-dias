@@ -6,7 +6,7 @@ import { SearchInput } from '../components/SearchInput';
 
 test('Login OrangeHRM', async ({ page }) => {
     const loginPage = new LoginPage(page);
-    await loginPage.doLogin('Admin', 'admin123');
+    await loginPage.loginasAdmin();
 
     const sidePanel = new SidePanel(page);
     await sidePanel.clickOnOption(SidePanelItems.Admin);
@@ -29,3 +29,12 @@ test('Invalid Login OrangeHRM', async ({ page }) => {
 
     await expect(page.getByText('Invalid credentials')).toBeVisible()
 });
+
+
+test('Login as Employee OrangeHRM', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    await loginPage.loginasEmployee();
+
+    await expect(page.getByRole('link', {name: 'Admin'})).not.toBeVisible()
+
+})
