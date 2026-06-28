@@ -1,5 +1,9 @@
 import {test, expect} from '@playwright/test';
 import { LoginPage } from '../pageobjects/LoginPage';
+import { TopBarMenu } from '../components/top-bar-menu/TopBarMenu';
+import { SidePanel, SidePanelItems } from '../components/SidePanel';
+import {organization} from '../components/top-bar-menu/organization';
+import {qualifications} from '../components/top-bar-menu/qualifications';
 
 test('Check left menu items options', async ({page}) => {
 
@@ -145,6 +149,27 @@ test('Check all the Organization links', async ({page}) => {
 
 
     }
-
-       
 });
+
+test('testing top bar menu', async ({page}) => {
+
+        const loginPage = new LoginPage(page);
+        await loginPage.loginasAdmin();
+
+        const sidePanel = new SidePanel(page);
+        await sidePanel.clickOnOption(SidePanelItems.Admin);
+
+        const topBarMenu = new TopBarMenu(page);
+
+        await topBarMenu.userManagement.clickOnUsers();
+        await topBarMenu.job.clickOnJobTitles();
+        await topBarMenu.job.clickOnPayGrades();
+    
+        await topBarMenu.organization.clickOnGeneralInformation();
+        await topBarMenu.qualifications.clickOnQualifications();
+        await topBarMenu.qualifications.clickOnSkills();
+       
+
+});
+
+
