@@ -187,3 +187,67 @@ test ('Check Status Options displayed', async ({page})  => {
 
 });
 
+test ('Filter by user Admin', async ({page}) => {
+    const loginPage = new LoginPage(page)
+    await loginPage.loginasAdmin()
+
+    const sidePanel = new SidePanel(page)
+    await sidePanel.clickOnOption(SidePanelItems.Admin)
+
+    const allBodyRows = page.getByRole('table').getByRole('rowgroup').nth(1).getByRole('row')
+
+    //Filas que contienen el role admin
+    const currentAdminRows = allBodyRows.filter({
+        has: page.getByRole('cell').nth(2).getByText('Admin')
+    })
+
+    const expectedAdminCount = await currentAdminRows.count()
+    console.log('Admin Users before filtering: ', expectedAdminCount)
+
+    //Aplica el filtro
+    await page.locator("//label[contains(.,'User Role')]/parent::div/following-sibling::div").click()
+    await page.getByRole("listbox").getByRole('option', {name: 'Admin'}).click()
+    await page.getByRole('button', {name: 'Search'}).click()
+
+    //tabla filtrada deberia tener la misma cantidad de users filtrados antes
+    await expect(allBodyRows).toHaveCount(expectedAdminCount)
+
+    for (let i=0; i<expectedAdminCount; i++){
+        await expect(allBodyRows.nth(i).getByRole('cell').nth(2)).toContainText('Admin')
+    }
+
+})
+
+test ('Filter by user Admin - validacion distinta', async ({page}) => {
+
+   const loginPage = new LoginPage(page);
+    await loginPage.loginasAdmin();
+
+    const sidePanel = new SidePanel(page);
+    await sidePanel.clickOnOption(SidePanelItems.Admin);
+
+    const allBodyRows = page.getByRole('table').getByRole('rowgroup').nth(1).getByRole('row');
+
+    // Filas que contienen el role Admin antes de filtrar
+    const currentAdminRows = allBodyRows.filter({
+        has: page.getByRole('cell').nth(2).getByText('Admin')
+    });
+
+    const expectedAdminCount = await currentAdminRows.count();
+    console.log('Admin Users before filtering: ', expectedAdminCount);
+
+    // Aplica el filtro
+    await page.locator("//label[contains(.,'User Role')]/parent::div/following-sibling::div").click();
+    await page.getByRole('listbox').getByRole('option', { name: 'Admin' }).click();
+    await page.getByRole('button', { name: 'Search' }).click();
+
+    // Validación 1 — cantidad de filas coincide con el conteo previo
+    await expect(allBodyRows).toHaveCount(expectedAdminCount);
+
+    // Validación 2 — no existe ninguna fila que NO sea Admin
+    const nonAdminRows = allBodyRows.filter({
+        hasNot: page.getByRole('cell').nth(2).getByText('Admin')
+    });
+    await expect(nonAdminRows).toHaveCount(0);
+
+})
