@@ -7,6 +7,7 @@ export class Environment {
     static readonly ADMIN_PASSWORD = Environment.getRequired('ADMIN_PASSWORD')
     static readonly EMPLOYEE_USERNAME = Environment.getRequired('EMPLOYEE_USERNAME')
     static readonly EMPLOYEE_PASSWORD = Environment.getRequired('EMPLOYEE_PASSWORD')
+    static readonly WRONG_PASSWORD = Environment.getRequired('WRONG_PASSWORD')
 
     private static getRequired(key: string): string {
         const value = process.env[key]

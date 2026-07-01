@@ -22,7 +22,7 @@ setup ('authentication as admin', async ({page}) => {
 
 })
 
-setup ('authentication as employee', async ({page}) => {
+/*setup ('authentication as employee', async ({page}) => {
 
     console.log('autenticacion usando el setup')
     //inicio de sesion
@@ -41,4 +41,4 @@ setup ('authentication as employee', async ({page}) => {
     console.log('Autenticacion completada usando el setup')
 
 
-})
+})*/
