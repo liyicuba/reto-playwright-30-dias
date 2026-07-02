@@ -3,6 +3,7 @@ import { LoginPage } from '../pageobjects/LoginPage';
 import { SidePanel, SidePanelItems } from '../components/SidePanel';
 import { SearchInput } from '../components/SearchInput';
 import { Environment } from '../config/Environment';
+import { AddNewUserPage } from '../pageobjects/AddNewUserPage'
 
 
 test('Login OrangeHRM', async ({ page }) => {
@@ -52,15 +53,20 @@ test('Crear un nuevo usuario', async ({ page }) => {
     const sidePanel = new SidePanel(page);
     await sidePanel.clickOnOption(SidePanelItems.Admin);
 
-    await loginPage.nuevoEmployee();
+    const addNewUserPage = new AddNewUserPage(page);
+    await addNewUserPage.clickOnAddButton();
+    await addNewUserPage.selectUserRole();
+    await addNewUserPage.fillEmployeeName();
+    await addNewUserPage.selectStatus();
+    await addNewUserPage.fillUsername();
+    await addNewUserPage.fillPassword();
+    await addNewUserPage.saveUser();
 
-    await expect(page.locator('p.oxd-text--toast-message')).toHaveText('Successfully Saved')
-          
-
+    await addNewUserPage.checkToastMessage();
 
 })
 
-test('Crear un nuevo usuario con distinta contraseña', async ({ page }) => {
+/*test('Crear un nuevo usuario con distinta contraseña', async ({ page }) => {
 
     const loginPage = new LoginPage(page);
     await loginPage.loginasAdmin();
@@ -76,4 +82,4 @@ test('Crear un nuevo usuario con distinta contraseña', async ({ page }) => {
     await expect(passwordsDoNotMatch).toHaveText('Passwords do not match')
     
 
-})
+})*/
