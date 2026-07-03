@@ -15,6 +15,8 @@ export class AddNewUserPage {
     readonly confirmPasswordField: Locator
     readonly saveButton: Locator
     readonly toastMessage: Locator
+    readonly wrongPasswordFields: Locator
+    readonly errorPasswordMessage: Locator
 
 
     constructor(page: Page) {
@@ -28,6 +30,9 @@ export class AddNewUserPage {
         this.statusDropdownOption = page.getByRole('listbox').getByRole('option', { name: 'Enabled' });
         this.passwordFields = page.locator("//label[contains(.,'Password')]/parent::div/following-sibling::div//input");
         this.confirmPasswordField = page.locator("//label[contains(.,'Confirm Password')]/parent::div/following-sibling::div//input");
+        this.wrongPasswordFields = page.locator("//label[contains(.,'Password')]/parent::div/following-sibling::div//input");
+        this.errorPasswordMessage = page.locator("//div[contains(@class, 'user-password-row')]//span[contains(@class, 'error')]");
+
         this.saveButton = page.getByRole('button', { name: 'Save' });
         this.toastMessage = page.locator('p.oxd-text--toast-message');
     }
@@ -73,6 +78,11 @@ async fillPassword(){
         await passwordFields.nth(0).fill(Environment.EMPLOYEE_PASSWORD); // Password
         await passwordFields.nth(1).fill(Environment.EMPLOYEE_PASSWORD); // Confirm Password
 }
+async fillwrongPassword(){
+        const passwordFields = this.passwordFields;
+        await passwordFields.nth(0).fill(Environment.EMPLOYEE_PASSWORD); // Password
+        await passwordFields.nth(1).fill(Environment.EMPLOYEE_PASSWORD + crypto.randomUUID().slice(0, 5)); // Confirm Password
+}
 
 async saveUser(){
         await this.saveButton.click()
@@ -83,36 +93,34 @@ async checkToastMessage(){
         await expect(this.toastMessage).toHaveText('Successfully Saved')
 
 }
+
+async addNewUser(){
+
+    await this.clickOnAddButton();
+    await this.selectUserRole();
+    await this.fillEmployeeName();
+    await this.selectStatus();
+    await this.fillUsername();
+    await this.fillPassword();
+    await this.saveUser();
+
 }
 
-/*async nuevowrongEmployee(){
+async addNewUserWithWrongPassword(){
 
-        await this.page.getByRole('button', { name: 'Add' }).click();
-        await this.page.locator("//label[contains(.,'User Role')]/parent::div/following-sibling::div").click();
-        await this.page.getByRole('listbox').getByRole('option', { name: 'ESS' }).click();
+    await this.clickOnAddButton();
+    await this.selectUserRole();
+    await this.fillEmployeeName();
+    await this.selectStatus();
+    await this.fillUsername();
+    await this.fillwrongPassword();
+    await this.saveUser();
 
-        const employeeNameField = this.page.getByRole('textbox', { name: 'Type for hints...' });
-        await employeeNameInput.click();
-        await employeeNameInput.fill('Test')
-        await this.page.waitForTimeout(1000);
+}
 
-        // Esperar que aparezca el listbox de sugerencias
-        const suggestions = this.page.getByRole('listbox').getByRole('option');
-        await suggestions.first().waitFor();
+async checkErrorPasswordMessage(){
+    await expect(this.errorPasswordMessage).toHaveText('Passwords do not match')
+}
 
-        // Seleccionar la primera opción
-        await suggestions.first().click();
-        await this.page.locator("//label[contains(.,'Status')]/parent::div/following-sibling::div").click()
-        await this.page.getByRole('listbox').getByRole('option', { name: 'Enabled' }).click();
 
-        const usernameInput = this.page.locator("//label[contains(.,'Username')]/parent::div/following-sibling::div//input")
-        await usernameInput.fill(Environment.EMPLOYEE_USERNAME + crypto.randomUUID().slice(0, 5)); // Generar un nombre de usuario único
-
-        const passwordFields = this.page.locator("//label[contains(.,'Password')]/parent::div/following-sibling::div//input")
-        await passwordFields.nth(0).fill(Environment.EMPLOYEE_PASSWORD); // Password
-        await passwordFields.nth(1).fill(Environment.EMPLOYEE_PASSWORD + crypto.randomUUID().slice(0, 5)); // Confirm Password
-            
-       // await this.page.getByRole('button', {name: 'Save'}).click()
-        
-        }
-    }*/
+}

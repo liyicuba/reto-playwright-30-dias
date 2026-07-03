@@ -54,19 +54,13 @@ test('Crear un nuevo usuario', async ({ page }) => {
     await sidePanel.clickOnOption(SidePanelItems.Admin);
 
     const addNewUserPage = new AddNewUserPage(page);
-    await addNewUserPage.clickOnAddButton();
-    await addNewUserPage.selectUserRole();
-    await addNewUserPage.fillEmployeeName();
-    await addNewUserPage.selectStatus();
-    await addNewUserPage.fillUsername();
-    await addNewUserPage.fillPassword();
-    await addNewUserPage.saveUser();
+    await addNewUserPage.addNewUser();
 
     await addNewUserPage.checkToastMessage();
 
 })
 
-/*test('Crear un nuevo usuario con distinta contraseña', async ({ page }) => {
+test('Crear un nuevo usuario con distinta contraseña', async ({ page }) => {
 
     const loginPage = new LoginPage(page);
     await loginPage.loginasAdmin();
@@ -74,12 +68,10 @@ test('Crear un nuevo usuario', async ({ page }) => {
     const sidePanel = new SidePanel(page);
     await sidePanel.clickOnOption(SidePanelItems.Admin);
 
-    await loginPage.nuevowrongEmployee();
+    const addNewUserPage = new AddNewUserPage(page);
+    await addNewUserPage.addNewUserWithWrongPassword();
+
+    await addNewUserPage.checkErrorPasswordMessage();
 
 
-    const passwordsDoNotMatch = page.locator('//div[contains(@class, "user-password-row")]//span[contains(@class, "error")]') 
-    //console.log('Texto completo del contenedor:', await passwordMismatchError.textContent());
-    await expect(passwordsDoNotMatch).toHaveText('Passwords do not match')
-    
-
-})*/
+})
