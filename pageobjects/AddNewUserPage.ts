@@ -1,5 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { Environment } from '../config/Environment';    
+import { UserModel } from '../models/UserModel';
 
 export class AddNewUserPage {
 
@@ -42,16 +43,15 @@ async clickOnAddButton(){
 
 }
 
-async selectUserRole(){
+async selectUserRole(userRole: string = 'ESS'){
         await this.userRoleDropdown.click();
-        await this.userRoleOption.click();
-
+        await this.page.getByRole('option', { name: userRole }).click();
 }
 
-async fillEmployeeName(){
+async fillEmployeeName(employeeName: string = 'Test'){
         const employeeNameField = this.employeeNameField;
         await employeeNameField.click();
-        await employeeNameField.fill('Test')
+        await employeeNameField.fill(employeeName)
         await this.page.waitForTimeout(1000);
 
         // Esperar que aparezca el listbox de sugerencias
@@ -62,21 +62,21 @@ async fillEmployeeName(){
         await suggestions.first().click();
 }
 
-async selectStatus(){
+async selectStatus(status: string = 'Enabled'){
         await this.statusDropdown.click()
-        await this.statusDropdownOption.click();
+        await this.page.getByRole('option', { name: status }).click();
 }
 
-async fillUsername(){
+async fillUsername(username: string = Environment.EMPLOYEE_USERNAME){
         const usernameField = this.usernameInput;
         await usernameField.click();
-        await usernameField.fill(Environment.EMPLOYEE_USERNAME + crypto.randomUUID().slice(0, 5)); // Generar un nombre de usuario único
+        await usernameField.fill(username); // Generar un nombre de usuario único
 }
 
-async fillPassword(){
+async fillPassword(password: string = Environment.EMPLOYEE_PASSWORD){
         const passwordFields = this.passwordFields;
-        await passwordFields.nth(0).fill(Environment.EMPLOYEE_PASSWORD); // Password
-        await passwordFields.nth(1).fill(Environment.EMPLOYEE_PASSWORD); // Confirm Password
+        await passwordFields.nth(0).fill(password); // Password
+        await passwordFields.nth(1).fill(password); // Confirm Password
 }
 async fillwrongPassword(){
         const passwordFields = this.passwordFields;
@@ -94,26 +94,15 @@ async checkToastMessage(){
 
 }
 
-async addNewUser(){
+async addNewUser(user: UserModel){
 
     await this.clickOnAddButton();
-    await this.selectUserRole();
-    await this.fillEmployeeName();
-    await this.selectStatus();
-    await this.fillUsername();
-    await this.fillPassword();
-    await this.saveUser();
-
-}
-
-async addNewUserWithWrongPassword(){
-
-    await this.clickOnAddButton();
-    await this.selectUserRole();
-    await this.fillEmployeeName();
-    await this.selectStatus();
-    await this.fillUsername();
-    await this.fillwrongPassword();
+    await this.selectUserRole(user.role);
+    await this.fillEmployeeName(user.employeeName);
+    await this.selectStatus(user.status);
+    await this.fillUsername(user.username);
+    await this.fillPassword(user.password);
+    await this.confirmPasswordField.fill(user.confirmPassword);
     await this.saveUser();
 
 }

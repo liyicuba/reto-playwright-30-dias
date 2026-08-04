@@ -4,6 +4,7 @@ import { SidePanel, SidePanelItems } from '../components/SidePanel';
 import { SearchInput } from '../components/SearchInput';
 import { Environment } from '../config/Environment';
 import { AddNewUserPage } from '../pageobjects/AddNewUserPage'
+import { UserFactory } from '../factory/UserFactory';
 
 
 test('Login OrangeHRM', async ({ page }) => {
@@ -53,8 +54,14 @@ test('Crear un nuevo usuario', async ({ page }) => {
     const sidePanel = new SidePanel(page);
     await sidePanel.clickOnOption(SidePanelItems.Admin);
 
+    const adminUser = UserFactory.createAdmin ({
+
+         employeeName: 'test'
+    })
+
+
     const addNewUserPage = new AddNewUserPage(page);
-    await addNewUserPage.addNewUser();
+    await addNewUserPage.addNewUser(adminUser);
 
     await addNewUserPage.checkToastMessage();
 
@@ -68,10 +75,37 @@ test('Crear un nuevo usuario con distinta contraseña', async ({ page }) => {
     const sidePanel = new SidePanel(page);
     await sidePanel.clickOnOption(SidePanelItems.Admin);
 
-    const addNewUserPage = new AddNewUserPage(page);
-    await addNewUserPage.addNewUserWithWrongPassword();
+    const employeeESSUser = UserFactory.createEmployeeESS({
+        employeeName: 'test',
+        confirmPassword: 'wrongPassword123!'
+    })
+
+    const addNewUserPage = new AddNewUserPage(page)
+    await addNewUserPage.addNewUser(employeeESSUser);
 
     await addNewUserPage.checkErrorPasswordMessage();
 
+
+})
+
+test('Crear un nuevo usuario Admin con contraseña incorrecta', async ({ page }) => {
+
+    
+    const loginPage = new LoginPage(page);
+    await loginPage.loginasAdmin();
+
+    const sidePanel = new SidePanel(page);
+    await sidePanel.clickOnOption(SidePanelItems.Admin);
+
+    const adminUser = UserFactory.createAdmin({
+        employeeName: 'test',
+        confirmPassword: 'wrongPassword123!'
+
+    });
+
+    const addNewUserPage = new AddNewUserPage(page);
+    await addNewUserPage.addNewUser(adminUser);
+
+    await addNewUserPage.checkErrorPasswordMessage();
 
 })
