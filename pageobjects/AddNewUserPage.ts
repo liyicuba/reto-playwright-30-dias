@@ -52,7 +52,7 @@ async fillEmployeeName(employeeName: string = 'Test'){
         const employeeNameField = this.employeeNameField;
         await employeeNameField.click();
         await employeeNameField.fill(employeeName)
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(2000);
 
         // Esperar que aparezca el listbox de sugerencias
         const suggestions = this.page.getByRole('listbox').getByRole('option');
@@ -90,9 +90,15 @@ async saveUser(){
 }
 
 async checkToastMessage(){
+    await expect(this.toastMessage).toBeVisible({ timeout: 3000 });
+    await expect(this.toastMessage).toHaveText('Successfully Saved', { timeout: 2000 });
+}
+
+/*async checkToastMessage(){
+        //await this.toastMessage.waitFor({ state: 'visible', timeout: 50000 });
         await expect(this.toastMessage).toHaveText('Successfully Saved')
 
-}
+}*/
 
 async addNewUser(user: UserModel){
 
