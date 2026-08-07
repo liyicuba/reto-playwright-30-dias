@@ -4,6 +4,7 @@ import { SidePanel, SidePanelItems } from '../components/SidePanel';
 import { SearchInput } from '../components/SearchInput';
 import { Environment } from '../config/Environment';
 import { AddNewUserPage } from '../pageobjects/AddNewUserPage'
+import { UsersTable } from '../components/UsersTable';
 import { UserFactory } from '../factory/UserFactory';
 
 
@@ -86,7 +87,7 @@ import { UserFactory } from '../factory/UserFactory';
 
 })*/
 
-/*est('Crear un nuevo usuario Admin con contraseña incorrecta', async ({ page }) => {
+/*test('Crear un nuevo usuario Admin con contraseña incorrecta', async ({ page }) => {
 
     
     const loginPage = new LoginPage(page);
@@ -116,32 +117,17 @@ test('Crear un nuevo usuario Admin', async ({ page }) => {
     const sidePanel = new SidePanel(page);
     await sidePanel.clickOnOption(SidePanelItems.Admin);
 
-    const allBodyRows = page.getByRole('table').getByRole('rowgroup').nth(1).getByRole('row')
+    const usersTable = new UsersTable(page);
+    await usersTable.EditFirstAdminOnTheTable();
 
-    const currentAdminRows = allBodyRows.filter({
-        has: page.getByRole('cell').nth(2).getByText('Admin')
-    })
-
-    //await expect(currentAdminRows).toHaveCount(1)
-
-    const firstAdminSearch = currentAdminRows.nth(0)
-    await expect(firstAdminSearch, "Admin user not found in the table").toHaveCount(1)
-
-    await firstAdminSearch
-    .locator('button')
-    .filter({ has: page.locator('i.bi-pencil-fill') }).click()
-
-    const fullUserToSearch = await page.getByRole('textbox',{name: 'Type for hints...'}).inputValue()
-    console.log('Full user to search: ', fullUserToSearch)
+    const addNewUserPage = new AddNewUserPage(page);
+    const fullUserToSearch = await addNewUserPage.getEmployeeName();
 
     const adminUser = UserFactory.createAdmin ({
-
          employeeName: fullUserToSearch
     })
 
     await page.goBack()
-
-    const addNewUserPage = new AddNewUserPage(page);
     await addNewUserPage.addNewUser(adminUser);
     await addNewUserPage.checkToastMessage();
 
@@ -156,33 +142,17 @@ test('Crear un nuevo usuario ESS', async ({ page }) => {
     const sidePanel = new SidePanel(page);
     await sidePanel.clickOnOption(SidePanelItems.Admin);
 
-    const allBodyRows = page.getByRole('table').getByRole('rowgroup').nth(1).getByRole('row')
+    const usersTable = new UsersTable(page);
+    await usersTable.EditESSOnTheTable();
 
-    const currentESSRows = allBodyRows.filter({
-        has: page.getByRole('cell').nth(2).getByText('ESS')
-    })
-
-    const firstESSSearch = currentESSRows.nth(0)
-    await expect(firstESSSearch, "ESS user not found in the table").toBeVisible()
-
-    await firstESSSearch
-    .locator('button')
-    .filter({ has: page.locator('i.bi-pencil-fill') }).click()
-
-    const employeeNameField = page.getByRole('textbox', { name: 'Type for hints...' });
-    await employeeNameField.waitFor({ state: 'visible', timeout: 50000 });
-
-    const fullUserToSearch = await employeeNameField.inputValue();
-    console.log('Full user to search: ', fullUserToSearch)
-
+    const addNewUserPage = new AddNewUserPage(page);
+    const fullUserToSearch = await addNewUserPage.getEmployeeName();
    
     const employeeESSUser = UserFactory.createEmployeeESS({
          employeeName: fullUserToSearch
     })
 
     await page.goBack()
-
-    const addNewUserPage = new AddNewUserPage(page);
     await addNewUserPage.addNewUser(employeeESSUser);
     await addNewUserPage.checkToastMessage();
 

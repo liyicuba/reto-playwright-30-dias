@@ -1,20 +1,20 @@
-import {test, expect} from '@playwright/test'
+import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pageobjects/LoginPage';
 import { SidePanel, SidePanelItems } from '../components/SidePanel';
-
+import { SearchInput } from '../components/SearchInput';
+import { Environment } from '../config/Environment';
+import { AddNewUserPage } from '../pageobjects/AddNewUserPage'
+import { UsersTable } from '../components/UsersTable';
+import { UserFactory } from '../factory/UserFactory';
 
 
 test('get all the usernames registered', async ({page}) =>{
 
     const loginPage = new LoginPage(page);
-    await loginPage.doLogin('Admin', 'admin123');
+    await loginPage.loginasAdmin();
 
-    await expect(page.getByRole('link', {name: 'Admin'})).toBeVisible()
-
-    await page.getByRole('link', {name: 'Admin'}).click()
-
-    await page.getByRole('navigation', {name: 'Topbar menu'}).getByText('User Management').click()
-    await page.getByRole('menuitem', {name: 'Users'}).click()
+    const sidePanel = new SidePanel(page);
+    await sidePanel.clickOnOption(SidePanelItems.Admin);
     
     const rows = page.getByRole('table').getByRole('row')
     const usernames:  string [] = []
@@ -36,14 +36,10 @@ test('get all the usernames registered', async ({page}) =>{
 test('get all the Employees registered', async ({page}) =>{
 
     const loginPage = new LoginPage(page);
-    await loginPage.doLogin('Admin', 'admin123');
+    await loginPage.loginasAdmin();
 
-    await expect(page.getByRole('link', {name: 'Admin'})).toBeVisible()
-
-    await page.getByRole('link', {name: 'Admin'}).click()
-
-    await page.getByRole('navigation', {name: 'Topbar menu'}).getByText('User Management').click()
-    await page.getByRole('menuitem', {name: 'Users'}).click()
+    const sidePanel = new SidePanel(page);
+    await sidePanel.clickOnOption(SidePanelItems.Admin);
     
     const rows = page.getByRole('table').getByRole('row')
     const employees:  string [] = []
@@ -68,14 +64,10 @@ test('Select specific user for edition', async ({page}) =>{
     const userForEdition = 'teamseven'
 
     const loginPage = new LoginPage(page);
-    await loginPage.doLogin('Admin', 'admin123');
+    await loginPage.loginasAdmin();
 
-    await expect(page.getByRole('link', {name: 'Admin'})).toBeVisible()
-
-    await page.getByRole('link', {name: 'Admin'}).click()
-
-    await page.getByRole('navigation', {name: 'Topbar menu'}).getByText('User Management').click()
-    await page.getByRole('menuitem', {name: 'Users'}).click()
+    const sidePanel = new SidePanel(page);
+    await sidePanel.clickOnOption(SidePanelItems.Admin);
 
     const pencilIcon = page
      .getByRole('table')
@@ -94,14 +86,10 @@ test('Select specific user for edition', async ({page}) =>{
 test('Select random user different from Admin and validate', async ({ page }) => {
 
     const loginPage = new LoginPage(page);
-    await loginPage.doLogin('Admin', 'admin123');
+    await loginPage.loginasAdmin();
 
-    await expect(page.getByRole('link', {name: 'Admin'})).toBeVisible()
-
-    await page.getByRole('link', {name: 'Admin'}).click()
-
-    await page.getByRole('navigation', {name: 'Topbar menu'}).getByText('User Management').click()
-    await page.getByRole('menuitem', {name: 'Users'}).click()
+    const sidePanel = new SidePanel(page);
+    await sidePanel.clickOnOption(SidePanelItems.Admin);
 
     await page.waitForSelector('div.oxd-table-body');
 
@@ -154,16 +142,13 @@ test('Check user role options', async ({page}) => {
     const sidePanel = new SidePanel(page)
     await sidePanel.clickOnOption(SidePanelItems.Admin)
 
-    await page.locator("//label[contains(.,'User Role')]/parent::div/following-sibling::div").click()
-    const currentUserRoleOptions= await page.getByRole('listbox').getByRole('option').allInnerTexts()
+    const usersTable = new UsersTable(page)
+    const currentUserRoleOptions = await usersTable.UserRoleDropdown()
 
     console.log(currentUserRoleOptions)
 
-    expect(currentUserRoleOptions, 'The options displayed in the user Role dropdown do not match the expected options').toEqual(expectedRoleOPtions)
-    
-    
-
-
+    expect(await currentUserRoleOptions.allInnerTexts(), 'The options displayed in the user Role dropdown do not match the expected options').toEqual(expectedRoleOPtions)
+   
 });
 
 test ('Check Status Options displayed', async ({page})  => {
@@ -176,78 +161,59 @@ test ('Check Status Options displayed', async ({page})  => {
     const sidePanel = new SidePanel(page)
     await sidePanel.clickOnOption(SidePanelItems.Admin)
     
-    await page.locator("//label[contains(.,'Status')]/parent::div/following-sibling::div").click()
-    const currentStatusOptions= await page.getByRole('listbox').getByRole('option').allInnerTexts()
+    
+    const usersTable = new UsersTable(page)
+    const currentStatusOptions = await usersTable.StatusDropdown()
 
     console.log(currentStatusOptions)
 
-    expect(currentStatusOptions, 'The option for Status dropdown do not match').toEqual(expectedStatusOptions)
+    expect(await currentStatusOptions.allInnerTexts(), 'The option for Status dropdown do not match').toEqual(expectedStatusOptions)
 
 
 
 });
 
-test ('Filter by user Admin', async ({page}) => {
+test('Filter by user Admin', async ({ page }) => {
     const loginPage = new LoginPage(page)
     await loginPage.loginasAdmin()
 
     const sidePanel = new SidePanel(page)
     await sidePanel.clickOnOption(SidePanelItems.Admin)
 
-    const allBodyRows = page.getByRole('table').getByRole('rowgroup').nth(1).getByRole('row')
+    const usersTable = new UsersTable(page)
 
-    //Filas que contienen el role admin
-    const currentAdminRows = allBodyRows.filter({
-        has: page.getByRole('cell').nth(2).getByText('Admin')
-    })
+    // 1. Contar cuántos Admin hay ANTES de aplicar el filtro
+    const expectedAdminCount = await usersTable.countAdminRows()
+    console.log('Admins antes del filtro:', expectedAdminCount)
 
-    const expectedAdminCount = await currentAdminRows.count()
-    console.log('Admin Users before filtering: ', expectedAdminCount)
+    // 2. Aplicar el filtro por rol Admin
+    await usersTable.filterByUserRoleAdmin('Admin')
 
-    //Aplica el filtro
-    await page.locator("//label[contains(.,'User Role')]/parent::div/following-sibling::div").click()
-    await page.getByRole("listbox").getByRole('option', {name: 'Admin'}).click()
-    await page.getByRole('button', {name: 'Search'}).click()
-
-    //tabla filtrada deberia tener la misma cantidad de users filtrados antes
-    await expect(allBodyRows).toHaveCount(expectedAdminCount)
-
-    for (let i=0; i<expectedAdminCount; i++){
-        await expect(allBodyRows.nth(i).getByRole('cell').nth(2)).toContainText('Admin')
-    }
-
+    // 3. Validar que la tabla filtrada tenga esa misma cantidad, y que todas las filas sean Admin
+    await usersTable.validateFilteredAdminRows(expectedAdminCount)
 })
 
-test ('Filter by user Admin - validacion distinta', async ({page}) => {
+test('Filter by user Admin - validacion distinta', async ({ page }) => {
 
-   const loginPage = new LoginPage(page);
-    await loginPage.loginasAdmin();
+    const loginPage = new LoginPage(page)
+    await loginPage.loginasAdmin()
 
-    const sidePanel = new SidePanel(page);
-    await sidePanel.clickOnOption(SidePanelItems.Admin);
+    const sidePanel = new SidePanel(page)
+    await sidePanel.clickOnOption(SidePanelItems.Admin)
 
-    const allBodyRows = page.getByRole('table').getByRole('rowgroup').nth(1).getByRole('row');
+    const usersTable = new UsersTable(page)
 
-    // Filas que contienen el role Admin antes de filtrar
-    const currentAdminRows = allBodyRows.filter({
-        has: page.getByRole('cell').nth(2).getByText('Admin')
-    });
-
-    const expectedAdminCount = await currentAdminRows.count();
-    console.log('Admin Users before filtering: ', expectedAdminCount);
+    // Cantidad de Admin ANTES de filtrar
+    const expectedAdminCount = await usersTable.countAdminRows()
+    console.log('Admin Users before filtering: ', expectedAdminCount)
 
     // Aplica el filtro
-    await page.locator("//label[contains(.,'User Role')]/parent::div/following-sibling::div").click();
-    await page.getByRole('listbox').getByRole('option', { name: 'Admin' }).click();
-    await page.getByRole('button', { name: 'Search' }).click();
+    await usersTable.filterByUserRoleAdmin('Admin')
 
-    // Validación 1 — cantidad de filas coincide con el conteo previo
-    await expect(allBodyRows).toHaveCount(expectedAdminCount);
+    // Validación 1 — el total de filas de la tabla coincide con el conteo previo de Admin
+    await usersTable.validateTotalRowsCount(expectedAdminCount)
 
     // Validación 2 — no existe ninguna fila que NO sea Admin
-    const nonAdminRows = allBodyRows.filter({
-        hasNot: page.getByRole('cell').nth(2).getByText('Admin')
-    });
-    await expect(nonAdminRows).toHaveCount(0);
+    await usersTable.validateNoNonAdminRows()
 
 })

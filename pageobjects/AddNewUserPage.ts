@@ -21,101 +21,99 @@ export class AddNewUserPage {
 
 
     constructor(page: Page) {
-        this.page = page;
-        this.addButton = page.getByRole('button', { name: 'Add' });
-        this.userRoleDropdown = page.locator("//label[contains(.,'User Role')]/parent::div/following-sibling::div");
-        this.userRoleOption = page.getByRole('listbox').getByRole('option', { name: 'ESS' });
-        this.employeeNameField = page.getByRole('textbox', { name: 'Type for hints...' });
-        this.usernameInput = page.locator("//label[contains(.,'Username')]/parent::div/following-sibling::div//input");
-        this.statusDropdown = page.locator("//label[contains(.,'Status')]/parent::div/following-sibling::div");
-        this.statusDropdownOption = page.getByRole('listbox').getByRole('option', { name: 'Enabled' });
-        this.passwordFields = page.locator("//label[contains(.,'Password')]/parent::div/following-sibling::div//input");
-        this.confirmPasswordField = page.locator("//label[contains(.,'Confirm Password')]/parent::div/following-sibling::div//input");
-        this.wrongPasswordFields = page.locator("//label[contains(.,'Password')]/parent::div/following-sibling::div//input");
-        this.errorPasswordMessage = page.locator("//div[contains(@class, 'user-password-row')]//span[contains(@class, 'error')]");
 
-        this.saveButton = page.getByRole('button', { name: 'Save' });
-        this.toastMessage = page.locator('p.oxd-text--toast-message');
-    }
-async clickOnAddButton(){
+                this.page = page;
+                this.addButton = page.getByRole('button', { name: 'Add' });
+                this.userRoleDropdown = page.locator("//label[contains(.,'User Role')]/parent::div/following-sibling::div");
+                this.userRoleOption = page.getByRole('listbox').getByRole('option', { name: 'ESS' });
+                this.employeeNameField = page.getByRole('textbox', { name: 'Type for hints...' });
+                this.usernameInput = page.locator("//label[contains(.,'Username')]/parent::div/following-sibling::div//input");
+                this.statusDropdown = page.locator("//label[contains(.,'Status')]/parent::div/following-sibling::div");
+                this.statusDropdownOption = page.getByRole('listbox').getByRole('option', { name: 'Enabled' });
+                this.passwordFields = page.locator("//label[contains(.,'Password')]/parent::div/following-sibling::div//input");
+                this.confirmPasswordField = page.locator("//label[contains(.,'Confirm Password')]/parent::div/following-sibling::div//input");
+                this.wrongPasswordFields = page.locator("//label[contains(.,'Password')]/parent::div/following-sibling::div//input");
+                this.errorPasswordMessage = page.locator("//div[contains(@class, 'user-password-row')]//span[contains(@class, 'error')]");
+                this.saveButton = page.getByRole('button', { name: 'Save' });
+                this.toastMessage = page.locator('p.oxd-text--toast-message');
+        }
 
-        await this.addButton.click();
+        async clickOnAddButton(){
 
-}
+                await this.addButton.click();
+        }
 
-async selectUserRole(userRole: string = 'ESS'){
-        await this.userRoleDropdown.click();
-        await this.page.getByRole('option', { name: userRole }).click();
-}
+        async selectUserRole(userRole: string = 'ESS'){
+                await this.userRoleDropdown.click();
+                await this.page.getByRole('option', { name: userRole }).click();
+        }
 
-async fillEmployeeName(employeeName: string = 'Test'){
-        const employeeNameField = this.employeeNameField;
-        await employeeNameField.click();
-        await employeeNameField.fill(employeeName)
-        await this.page.waitForTimeout(2000);
+        async fillEmployeeName(employeeName: string = 'Test'){
+                const employeeNameField = this.employeeNameField;
+                await employeeNameField.click();
+                await employeeNameField.fill(employeeName)
+                await this.page.waitForTimeout(2000);
 
-        // Esperar que aparezca el listbox de sugerencias
-        const suggestions = this.page.getByRole('listbox').getByRole('option');
-        await suggestions.first().waitFor();
+                // Esperar que aparezca el listbox de sugerencias
+                 const suggestions = this.page.getByRole('listbox').getByRole('option');
+                await suggestions.first().waitFor();
 
-        // Seleccionar la primera opción
-        await suggestions.first().click();
-}
+                // Seleccionar la primera opción
+                await suggestions.first().click();
+        }
 
-async selectStatus(status: string = 'Enabled'){
-        await this.statusDropdown.click()
-        await this.page.getByRole('option', { name: status }).click();
-}
+        async selectStatus(status: string = 'Enabled'){
+                await this.statusDropdown.click()
+                await this.page.getByRole('option', { name: status }).click();
+        }
 
-async fillUsername(username: string = Environment.EMPLOYEE_USERNAME){
-        const usernameField = this.usernameInput;
-        await usernameField.click();
-        await usernameField.fill(username); // Generar un nombre de usuario único
-}
+        async fillUsername(username: string = Environment.EMPLOYEE_USERNAME){
+                const usernameField = this.usernameInput;
+                await usernameField.click();
+                await usernameField.fill(username); // Generar un nombre de usuario único
+        }
 
-async fillPassword(password: string = Environment.EMPLOYEE_PASSWORD){
-        const passwordFields = this.passwordFields;
-        await passwordFields.nth(0).fill(password); // Password
-        await passwordFields.nth(1).fill(password); // Confirm Password
-}
-async fillwrongPassword(){
-        const passwordFields = this.passwordFields;
-        await passwordFields.nth(0).fill(Environment.EMPLOYEE_PASSWORD); // Password
-        await passwordFields.nth(1).fill(Environment.EMPLOYEE_PASSWORD + crypto.randomUUID().slice(0, 5)); // Confirm Password
-}
+        async fillPassword(password: string = Environment.EMPLOYEE_PASSWORD){
+                const passwordFields = this.passwordFields;
+                await passwordFields.nth(0).fill(password); // Password
+                await passwordFields.nth(1).fill(password); // Confirm Password
+        }
 
-async saveUser(){
-        await this.saveButton.click()
-        
-}
+        async fillwrongPassword(){
+                const passwordFields = this.passwordFields;
+                await passwordFields.nth(0).fill(Environment.EMPLOYEE_PASSWORD); // Password
+                await passwordFields.nth(1).fill(Environment.EMPLOYEE_PASSWORD + crypto.randomUUID().slice(0, 5)); // Confirm Password
+        }
 
-async checkToastMessage(){
-    await expect(this.toastMessage).toBeVisible({ timeout: 3000 });
-    await expect(this.toastMessage).toHaveText('Successfully Saved', { timeout: 2000 });
-}
+        async saveUser(){
+                await this.saveButton.click()
+        }
 
-/*async checkToastMessage(){
-        //await this.toastMessage.waitFor({ state: 'visible', timeout: 50000 });
-        await expect(this.toastMessage).toHaveText('Successfully Saved')
+        async checkToastMessage(){
 
-}*/
+                //await expect(this.toastMessage).toBeVisible({ timeout: 3000 });
+                await expect(this.toastMessage).toHaveText('Successfully Saved', { timeout: 2000 });
+        }
 
-async addNewUser(user: UserModel){
+        async addNewUser(user: UserModel){
 
-    await this.clickOnAddButton();
-    await this.selectUserRole(user.role);
-    await this.fillEmployeeName(user.employeeName);
-    await this.selectStatus(user.status);
-    await this.fillUsername(user.username);
-    await this.fillPassword(user.password);
-    await this.confirmPasswordField.fill(user.confirmPassword);
-    await this.saveUser();
+                await this.clickOnAddButton();
+                await this.selectUserRole(user.role);
+                await this.fillEmployeeName(user.employeeName);
+                await this.selectStatus(user.status);
+                await this.fillUsername(user.username);
+                await this.fillPassword(user.password);
+                await this.confirmPasswordField.fill(user.confirmPassword);
+                await this.saveUser();
+        }
 
-}
+        async checkErrorPasswordMessage(){
+                await expect(this.errorPasswordMessage).toHaveText('Passwords do not match')
+        }
 
-async checkErrorPasswordMessage(){
-    await expect(this.errorPasswordMessage).toHaveText('Passwords do not match')
-}
-
-
+        async getEmployeeName(): Promise<string> {
+                const fullUserToSearch = await this.employeeNameField.inputValue()
+                console.log('Full user to search: ', fullUserToSearch)
+                return fullUserToSearch
+        }
 }
