@@ -4,6 +4,7 @@ import { SidePanel, SidePanelItems } from '../components/SidePanel';
 import { SearchInput } from '../components/SearchInput';
 import { Environment } from '../config/Environment';
 import { AddNewUserPage } from '../pageobjects/AddNewUserPage'
+import { Navigate } from '../pageobjects/Navigate';
 import { UsersTable } from '../components/UsersTable';
 import { UserFactory } from '../factory/UserFactory';
 
@@ -114,8 +115,8 @@ test('Crear un nuevo usuario Admin', async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.loginasAdmin();
 
-    const sidePanel = new SidePanel(page);
-    await sidePanel.clickOnOption(SidePanelItems.Admin);
+    const navigate = new Navigate(page);
+    await navigate.toUsers();
 
     const usersTable = new UsersTable(page);
     await usersTable.EditFirstAdminOnTheTable();
@@ -133,8 +134,44 @@ test('Crear un nuevo usuario Admin', async ({ page }) => {
 
 })
 
+test('Reto 21 - Delete un usuario Admin', async ({ page }) => {
 
-test('Crear un nuevo usuario ESS', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    await loginPage.loginasAdmin();
+
+    const navigate = new Navigate(page);
+    await navigate.toUsers();
+
+    const usersTable = new UsersTable(page);
+    await usersTable.EditFirstAdminOnTheTable();
+
+    const addNewUserPage = new AddNewUserPage(page);
+    const fullUserToSearch = await addNewUserPage.getEmployeeName();
+
+    const adminUser = UserFactory.createAdmin ({
+         employeeName: fullUserToSearch
+    })
+
+    await page.goBack()
+    await addNewUserPage.addNewUser(adminUser);
+    await addNewUserPage.checkToastMessage();
+
+    //ACT
+    await usersTable.clickOnDeleteButton(adminUser.username);
+    await usersTable.confirmDeleteUser();
+
+    //Assert
+    await addNewUserPage.checkDeleteToastMessage();
+
+    //Valida que ya no exista el usuario en la tabla
+    const userStillExists = await usersTable.userExistsInTable(adminUser.username);
+    expect(userStillExists, `User ${adminUser.username} should not exist after deletion`).toBe(false);
+
+
+})
+
+
+/*test('Crear un nuevo usuario ESS', async ({ page }) => {
 
     const loginPage = new LoginPage(page);
     await loginPage.loginasAdmin();
@@ -156,5 +193,39 @@ test('Crear un nuevo usuario ESS', async ({ page }) => {
     await addNewUserPage.addNewUser(employeeESSUser);
     await addNewUserPage.checkToastMessage();
 
+
+})*/
+
+
+
+test('Reto 21 - Cancelar Delete de un usuario Admin', async ({ page }) => {
+
+    const loginPage = new LoginPage(page);
+    await loginPage.loginasAdmin();
+
+    const navigate = new Navigate(page);
+    await navigate.toUsers();
+
+    const usersTable = new UsersTable(page);
+    await usersTable.EditFirstAdminOnTheTable();
+
+    const addNewUserPage = new AddNewUserPage(page);
+    const fullUserToSearch = await addNewUserPage.getEmployeeName();
+
+    const adminUser = UserFactory.createAdmin({
+         employeeName: fullUserToSearch
+    })
+
+    await page.goBack()
+    await addNewUserPage.addNewUser(adminUser);
+    await addNewUserPage.checkToastMessage();
+
+    //ACT
+    await usersTable.clickOnDeleteButton(adminUser.username);
+    await usersTable.cancelDeleteUser();
+
+    //Assert
+    const userStillExists = await usersTable.userExistsInTable(adminUser.username);
+    expect(userStillExists, `User ${adminUser.username} should still exist after cancelling deletion`).toBe(true);
 
 })

@@ -95,6 +95,12 @@ export class AddNewUserPage {
                 await expect(this.toastMessage).toHaveText('Successfully Saved', { timeout: 2000 });
         }
 
+          async checkDeleteToastMessage(){
+
+                //await expect(this.toastMessage).toBeVisible({ timeout: 3000 });
+                await expect(this.toastMessage).toHaveText('Successfully Deleted', { timeout: 30000 });
+        }
+
         async addNewUser(user: UserModel){
 
                 await this.clickOnAddButton();
@@ -103,7 +109,7 @@ export class AddNewUserPage {
                 await this.selectStatus(user.status);
                 await this.fillUsername(user.username);
                 await this.fillPassword(user.password);
-                await this.confirmPasswordField.fill(user.confirmPassword);
+                await this.confirmPasswordField.fill(user.password);
                 await this.saveUser();
         }
 

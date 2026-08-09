@@ -111,5 +111,37 @@ export class UsersTable {
     await expect(this.getNonAdminRows(), 'Found rows that are not Admin after filtering').toHaveCount(0)
 
     }
-    
+
+    async clickOnDeleteButton(username: string) {
+    const allBodyRows = this.getAllBodyRows()
+    const filteredRowsUsername = allBodyRows.filter({
+        has: this.page.getByRole('cell').nth(1).getByText(username)
+    })
+
+    await expect(filteredRowsUsername, `User with username ${username} not found in the table`).toHaveCount(1)
+
+    console.log(`Found user in table, deleting username: ${username}`)
+
+    await filteredRowsUsername
+        .locator('button')
+        .filter({ has: this.page.locator('i.bi-trash') }).click()
+    }
+
+    async confirmDeleteUser() {
+        await this.page.getByRole('button', { name: 'Yes, Delete' }).click()
+    }
+
+    async cancelDeleteUser() {
+        await this.page.getByRole('button', { name: 'Cancel' }).click()
+    }
+
+    async userExistsInTable(username: string): Promise<boolean> {
+        const filteredRowsUsername = this.getAllBodyRows().filter({
+        has: this.page.getByRole('cell').nth(1).getByText(username)
+        })
+        const exists = await filteredRowsUsername.count() > 0
+        console.log(`Checking if username "${username}" exists in table: ${exists}`)
+        return exists
+    }
+
 }
