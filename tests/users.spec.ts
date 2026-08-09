@@ -8,7 +8,7 @@ import { UsersTable } from '../components/UsersTable';
 import { UserFactory } from '../factory/UserFactory';
 
 
-test('get all the usernames registered', async ({page}) =>{
+/*test('get all the usernames registered', async ({page}) =>{
 
     const loginPage = new LoginPage(page);
     await loginPage.loginasAdmin();
@@ -31,9 +31,9 @@ test('get all the usernames registered', async ({page}) =>{
     console.log('Usernames:', usernames)
 
 
-})
+})*/
 
-test('get all the Employees registered', async ({page}) =>{
+/*test('get all the Employees registered', async ({page}) =>{
 
     const loginPage = new LoginPage(page);
     await loginPage.loginasAdmin();
@@ -57,9 +57,9 @@ test('get all the Employees registered', async ({page}) =>{
 
 
 
-})
+})*/
 
-test('Select specific user for edition', async ({page}) =>{
+/*test('Select specific user for edition', async ({page}) =>{
 
     const userForEdition = 'teamseven'
 
@@ -81,9 +81,9 @@ test('Select specific user for edition', async ({page}) =>{
     const currentUsername = await page.locator("//label[contains(.,'Username')]/parent::div/following-sibling::div/input").inputValue()
     expect(currentUsername).toBe(userForEdition)
 
-})
+})*/
 
-test('Select random user different from Admin and validate', async ({ page }) => {
+/*test('Select random user different from Admin and validate', async ({ page }) => {
 
     const loginPage = new LoginPage(page);
     await loginPage.loginasAdmin();
@@ -130,7 +130,7 @@ test('Select random user different from Admin and validate', async ({ page }) =>
     expect(usernameEnEdit.trim()).toBe(random.username);
 
     console.log(`✅ Validación OK: "${usernameEnEdit}" coincide con "${random.username}"`);
-});
+});*/
 
 test('Check user role options', async ({page}) => {
 

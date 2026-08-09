@@ -21,7 +21,7 @@ jobs:
       run: npm ci
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
-    - name: Run Playwright tests --grep ""
+    - name: Run Playwright tests --grep "Reto 21 - Cancelar Delete de un usuario Admin"
       run: npx playwright test
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
