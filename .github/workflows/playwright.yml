@@ -30,9 +30,9 @@ jobs:
     - name: Run Playwright tests 
       run: |
         if [ -n "${{ github.event.inputs.grep }}" ]; then
-          npx playwright test --grep "${{ github.event.inputs.grep }}" --project= "admin"
+          npx playwright test --grep "${{ github.event.inputs.grep }}" --project="admin"
         else
-         npx playwright test --project= "admin"
+          npx playwright test --project="admin"
         fi
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
