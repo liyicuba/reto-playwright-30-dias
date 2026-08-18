@@ -43,11 +43,14 @@ jobs:
       run: npx playwright install --with-deps
     - name: Run Playwright tests 
       run: |
+        echo "Starting Playwright tests"
+        echo "Project selected: $PROJECT"
         if [ -n "${{ github.event.inputs.grep }}" ]; then
           npx playwright test --grep "$GREP" --project="$PROJECT"
         else
           npx playwright test --project="$PROJECT"
         fi
+        echo "Finished Playwright tests"
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
