@@ -16,12 +16,20 @@ export class LoginPage {
     }
 
 
-    async doLogin(username: string, password: string) {
+    /*async doLogin(username: string, password: string) {
         await this.page.goto('/web/index.php/auth/login');
         await this.usernameInput.fill(username);
         await this.passwordInput.fill(password);
         await this.loginButton.click();
-    }
+    }*/
+
+    async doLogin(username: string, password: string) {
+    await this.page.goto('/web/index.php/auth/login', { waitUntil: 'networkidle' });
+    await this.usernameInput.waitFor({ state: 'visible', timeout: 30000 });
+    await this.usernameInput.fill(username);
+    await this.passwordInput.fill(password);
+    await this.loginButton.click();
+}
 
     async loginasAdmin() {
         await this.doLogin(Environment.ADMIN_USERNAME, Environment.ADMIN_PASSWORD);

@@ -35,8 +35,8 @@ import { UserFactory } from '../factory/UserFactory';
 
 test('get all the Employees registered', async ({page}) =>{
 
-    const loginPage = new LoginPage(page);
-    await loginPage.loginasAdmin();
+    // Ya estás autenticado gracias al storageState del proyecto 'admin' (.auth/admin.json)
+    await page.goto('/web/index.php/pim/viewEmployeeList')
 
     const sidePanel = new SidePanel(page);
     await sidePanel.clickOnOption(SidePanelItems.Admin);
@@ -54,8 +54,6 @@ test('get all the Employees registered', async ({page}) =>{
         }
     }
     console.log('Employees:', employees)
-
-
 
 })
 

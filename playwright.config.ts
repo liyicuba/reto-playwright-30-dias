@@ -25,6 +25,12 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
+
+  /* Timeout específico para aserciones (expect) */
+  expect: {
+    timeout: process.env.CI ? 15000 : 10000,
+  },
+
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
@@ -33,6 +39,12 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+
+    /* Timeout para navegaciones (goto, waitForNavigation, etc.) */
+    navigationTimeout: process.env.CI ? 45000 : 20000,
+
+    /* Timeout para acciones (fill, click, etc.) */
+    actionTimeout: process.env.CI ? 20000 : 10000,
 
     launchOptions: {
       slowMo: process.env.CI ? 0 : 1000
