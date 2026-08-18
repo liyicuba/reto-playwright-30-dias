@@ -33,7 +33,7 @@ import { UserFactory } from '../factory/UserFactory';
 
 })*/
 
-/*test('get all the Employees registered', async ({page}) =>{
+test('get all the Employees registered', async ({page}) =>{
 
     const loginPage = new LoginPage(page);
     await loginPage.loginasAdmin();
@@ -57,7 +57,7 @@ import { UserFactory } from '../factory/UserFactory';
 
 
 
-})*/
+})
 
 /*test('Select specific user for edition', async ({page}) =>{
 

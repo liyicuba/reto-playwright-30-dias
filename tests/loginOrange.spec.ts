@@ -9,28 +9,27 @@ import { UsersTable } from '../components/UsersTable';
 import { UserFactory } from '../factory/UserFactory';
 
 
-/*test('Login OrangeHRM', async ({ page }) => {
-    /*const loginPage = new LoginPage(page);
-    await loginPage.loginasAdmin();*/
+test('Login OrangeHRM', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    await loginPage.loginasAdmin();
 
-   /* await page.goto('/web/index.php/dashboard/index')
-
+   
     const sidePanel = new SidePanel(page);
     await sidePanel.clickOnOption(SidePanelItems.Admin);
      
     
-})*/
+})
 
-/*test('Search on SidePanel', async ({ page }) => {
+test('Search on SidePanel', async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.loginasAdmin()
 
     const searchInput = new SearchInput(page);
     await searchInput.searchAndValidate(SidePanelItems.Admin);
-});*/
+})
 
 
-/*test('Login as Employee OrangeHRM', async ({ page }) => {
+test('Login as Employee OrangeHRM', async ({ page }) => {
 
     const loginPage = new LoginPage(page);
     await loginPage.loginasEmployee();
@@ -39,16 +38,16 @@ import { UserFactory } from '../factory/UserFactory';
 
     
 
-})*/
+})
 
-/*test('Invalid Login OrangeHRM', async ({ page }) => {
+test('Invalid Login OrangeHRM', async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.loginWithWrongCredentials();
 
     await expect(page.getByText('Invalid credentials')).toBeVisible()
-});*/
+})
 
-/*test('Crear un nuevo usuario', async ({ page }) => {
+test('Crear un nuevo usuario', async ({ page }) => {
 
     const loginPage = new LoginPage(page);
     await loginPage.loginasAdmin();
@@ -67,9 +66,9 @@ import { UserFactory } from '../factory/UserFactory';
 
     await addNewUserPage.checkToastMessage();
 
-})*/
+})
 
-/*test('Crear un nuevo usuario con distinta contraseña', async ({ page }) => {
+test('Crear un nuevo usuario con distinta contraseña', async ({ page }) => {
 
     const loginPage = new LoginPage(page);
     await loginPage.loginasAdmin();
@@ -86,9 +85,9 @@ import { UserFactory } from '../factory/UserFactory';
     await addNewUserPage.addNewUser(employeeESSUser);
     await addNewUserPage.checkErrorPasswordMessage();
 
-})*/
+})
 
-/*test('Crear un nuevo usuario Admin con contraseña incorrecta', async ({ page }) => {
+test('Crear un nuevo usuario Admin con contraseña incorrecta', async ({ page }) => {
 
     
     const loginPage = new LoginPage(page);
@@ -108,7 +107,7 @@ import { UserFactory } from '../factory/UserFactory';
 
     await addNewUserPage.checkErrorPasswordMessage();
 
-})*/
+})
 
 test('Crear un nuevo usuario Admin', async ({ page }) => {
 
@@ -171,7 +170,7 @@ test('Reto 21 - Delete un usuario Admin', async ({ page }) => {
 })
 
 
-/*test('Crear un nuevo usuario ESS', async ({ page }) => {
+test('Crear un nuevo usuario ESS', async ({ page }) => {
 
     const loginPage = new LoginPage(page);
     await loginPage.loginasAdmin();
@@ -194,7 +193,7 @@ test('Reto 21 - Delete un usuario Admin', async ({ page }) => {
     await addNewUserPage.checkToastMessage();
 
 
-})*/
+})
 
 
 
